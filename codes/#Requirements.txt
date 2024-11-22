@@ -1,0 +1,71 @@
+###############################################################################
+#                                Requirements                                 #
+###############################################################################
+# 
+# Python Version:
+#     Python 3.11.4
+#
+# System Configuration:
+#     - Laptop: Apple M2 Max
+#     - RAM: 32 GB
+#     - Environment: Anaconda, Spyder IDE
+#
+# Purpose:
+#     This file lists the dependencies required to run the scripts. Some libraries 
+#     are part of the Python standard library and are built-in, while others 
+#     need to be installed via `pip` or `conda`. The following versions are tested 
+#     and confirmed to work for this project.
+#
+###############################################################################
+
+# ------------------------------
+# Built-in Python Libraries
+# ------------------------------
+
+os: built-in
+glob: built-in
+datetime: built-in
+warnings: built-in
+random: built-in
+pickle: 4.0   # Default format version used by Python's pickle module
+
+# ------------------------------
+# Third-Party Python Libraries
+# ------------------------------
+
+numpy==1.24.3
+pandas==2.1.3
+seaborn==0.12.2
+matplotlib==3.7.1
+scipy==1.11.3
+statsmodels==0.14.0
+abagen==0.1.4+15.gdc4a007
+nilearn==0.10.1
+nibabel==5.1.0
+neuromaps==0.0.4
+netneurotools==0.2.3
+surfplot==0.2.0
+joblib==1.2.0
+brainspace==0.1.10
+scikit-learn==1.3.0
+neuroHarmonize==2.4.5
+fslpy==2.21.1
+
+# ------------------------------
+# External Python Libraries
+# ------------------------------
+# pyls: Python Library for Surface-based Analysis
+# Source: https://github.com/rmarkello/pyls/blob/master/README.md
+
+# ------------------------------
+# Other used softwares
+# ------------------------------
+
+# MATLAB-R2023b
+    ABAnnotate
+    Source: https://github.com/LeonDLotter/ABAnnotate
+
+# wb_command and workbench==v2.0.1
+    Source: https://www.humanconnectome.org/software/connectome-workbench
+    Source: https://www.humanconnectome.org/software/workbench-command
+

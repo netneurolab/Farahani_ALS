@@ -1,20 +1,27 @@
 """
 *******************************************************************************
 
-General Function of the ALS Project      
+General Function of the ALS Project
 
-*******************************************************************************               
+*******************************************************************************
 """
 
 #------------------------------------------------------------------------------
+import os
+import globals
+import  scipy.io
 import random
 import numpy as np
+import nibabel as nib
 from surfplot import Plot
+from joblib import Parallel, delayed
 from neuromaps.datasets import fetch_fslr
 from brainspace.datasets import load_parcellation
-import nibabel as nib
 from sklearn.utils.validation import check_random_state
-import os
+from netneurotools.stats import gen_spinsamples
+from neuromaps.images import load_data, dlabel_to_gifti
+from netneurotools.datasets import fetch_schaefer2018, fetch_mmpall
+from globals import path_templates, path_atlas, path_medialwall
 
 random.seed(1)
 #------------------------------------------------------------------------------
@@ -505,5 +512,72 @@ def load_HCP_names():
 
     return(name_contrasts)
 
-#------------------------------------------------------------------------------
+
+
+#%%
+def save_parcellated_data_in_Schaefer_forVis(data, path_save, name_save):
+    """
+    Save a parcel-wise map based on the Schaefer-Tian atlas for visualization in workbench.
+
+    This function converts parcel-wise data based on the Schaefer-Tian atlas into a CIFTI dscalar format, suitable for 
+    visualization in Connectome Workbench. The function supports data for the cortex, subcortex, or both.
+
+    Args:
+        data (numpy array): The parcel-wise data to be saved. The expected shape depends on the `type_data` argument:
+                            - 'cortex': Data should have shape (400, 1) corresponding to the 400 cortical parcels.
+
+        path_save (str): The path where the output file will be saved.
+        name_save (str): The base name of the saved file.
+
+    Returns:
+        None. The function saves the parcel-wise data in a .dscalar.nii file format, which can be visualized using 
+        Connectome Workbench.
+    """
+
+
+    # Load the medial wall mask and the Schaefer-Tian atlas for the appropriate version
+    mask_medial_wall = scipy.io.loadmat(path_medialwall + 'fs_LR_32k_medial_mask.mat')['medial_mask'].astype(np.float32)
+
+    # Fetch the cortical atlas from the Schaefer parcellation
+    schaefer = fetch_schaefer2018('fslr32k')[f"{globals.nnodes}Parcels7Networks"]
+    atlas = load_data(dlabel_to_gifti(schaefer))
+    yeo_tian_cortical = atlas[(mask_medial_wall.flatten()) == 1]
+
+    # Initialize the data array to save
+    data_to_save = np.zeros(globals.num_cort_vertices_noMW)
+
+
+    data_to_save_cortex = np.zeros(globals.num_cort_vertices_noMW)
+    for n in range(1, globals.nnodes + 1):
+        data_to_save_cortex[yeo_tian_cortical == n] = data[n - 1]
+    data_to_save = data_to_save_cortex
+
+    # Load the appropriate template for saving
+    template_paths = {'cortex': os.path.join(path_templates, 'cortex.dscalar.nii')}
+    templates = {key: nib.cifti2.load(path) for key, path in template_paths.items()}
+    template = templates['cortex']
+    # Create and save the new CIFTI image
+    new_img = nib.Cifti2Image(data_to_save.reshape(1, -1),
+                              header=template.header,
+                              nifti_header=template.nifti_header)
+
+    # Save map
+    new_img.to_filename(os.path.join(path_save, f"{name_save}_parcellated" +'.dscalar.nii'))
+
+#%%
+def vasa_null_Schaefer(nspins):
+    # Info related to spin tests
+    coords = np.genfromtxt(path_atlas + 'Schaefer_400.txt')
+    coords = coords[:, -3:]
+    nnodes = len(coords)
+    hemiid = np.zeros((nnodes,))
+    hemiid[:int(nnodes/2)] = 1
+
+    spins = gen_spinsamples(coords,
+                            hemiid,
+                            n_rotate = nspins,
+                            seed = 1234,
+                            method = 'vasa')
+    return spins
+#%%
 # END

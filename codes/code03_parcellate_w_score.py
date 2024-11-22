@@ -1,28 +1,44 @@
 """
 *******************************************************************************
 
-Purpose:
-    Create parcel-wise results out of voxelwise results using Schaefer parcellation
-    for cortical regions and the JHU atlas for white matter regions.
+Script purpose:
 
-Output:
-    ------------------------------- python file -------------------------------
+    This script generates parcel-wise results from voxel-wise data, utilizing 
+    the Schaefer parcellation for cortical regions and the JHU atlas for 
+    white matter regions.
 
-    'mean_w_score_' + str(subtype) + '_Schaefer.npy'
-    'mean_w_score_' + str(subtype) + '_WM_tracts.npy'
+Script output:
 
-    ------------------  parcellated schaefer mean of atrophy ------------------
+    -----------------------------------------------------------------------
 
-    lh.mean_wscore_' + str(subtype) + '_Schaefer'
-    rh.mean_wscore_' + str(subtype) + '_Schaefer'
+    Parcellated mean w-score for cortical regions (Schaefer parcellation):
 
-    -----------------------  JHU labels mean of atrophy -----------------------
+         Gifti:
+        'lh.mean_wscore_' + str(subtype) + '_Schaefer.func.gii'
+        'rh.mean_wscore_' + str(subtype) + '_Schaefer.func.gii'
 
-    'mean_w_score_' + str(subtype) + '_WM_tracts.nii.gz
+         Cifti:
+        'mean_wscore_' + str(subtype) + '_Schaefer.dscalar.nii'
 
-*******************************************************************************
-NOTE:
-    in the saved files w-scores have already been multiplied by -1
+         Numpy array:
+        'mean_w_score_' + str(subtype) + '_Schaefer.npy'
+
+    -----------------------------------------------------------------------
+
+    Parcellated mean w-score for white matter tracts (JHU atlas):
+
+         Nifti:
+        'mean_w_score_' + str(subtype) + '_WM_tracts.nii.gz'
+
+         Numpy array:
+        'mean_w_score_' + str(subtype) + '_WM_tracts.npy'
+
+    -----------------------------------------------------------------------
+
+Note:
+
+    All saved w-scores have been multiplied by -1.
+    The results coming from this script are shown in Fig. 1b, Fig 1c.
 
 *******************************************************************************
 """
@@ -32,49 +48,29 @@ NOTE:
 #------------------------------------------------------------------------------
 
 import os
-import warnings
 import numpy as np
 import nibabel as nib
 import matplotlib.pyplot as plt
-from IPython import get_ipython
 from neuromaps.images import load_data
 from nilearn.plotting import plot_glass_brain
 from neuromaps.images import dlabel_to_gifti
 from netneurotools import datasets as nntdata
-from functions import (show_on_surface_and_save, 
+from functions import (show_on_surface_and_save,
+                       save_parcellated_data_in_Schaefer_forVis,
                        parcel2fsLR,
                        save_gifti,
                        load_nifti,
                        save_nifti)
+from globals import path_fig, path_results, path_mask, path_atlas, nnodes
 
 #------------------------------------------------------------------------------
-# Configuration
+# Constants
 #------------------------------------------------------------------------------
 
-warnings.filterwarnings("ignore")
-get_ipython().magic('reset -sf')
+subtype = 'all' # Options: 'all', 'spinal', 'bulbar'
 
 #------------------------------------------------------------------------------
-# Paths
-#------------------------------------------------------------------------------
-
-base_path       = '/Users/asaborzabadifarahani/Desktop/ALS/ALS_git/'
-path_mask       = os.path.join(base_path,'data/MNITemplates/mni_icbm152_nlin_sym_09c/')
-path_atlas      = os.path.join(base_path,'data/TransformedAtlases/')
-path_results    = os.path.join(base_path,'results/')
-script_name     = os.path.basename(__file__).split('.')[0]
-path_fig        = os.path.join(os.getcwd(), 'generated_figures/', script_name)
-os.makedirs(path_fig, exist_ok = True)
-
-#------------------------------------------------------------------------------
-# Constants 
-#------------------------------------------------------------------------------
-
-subtype         = 'all' #'all' #'spinal' #'bulbar'
-nnodes          =  400     # Run the code with nnodes = 400
-
-#------------------------------------------------------------------------------
-# Needed Functions
+# Needed functions
 #------------------------------------------------------------------------------
 
 def calculate_mean_w_score(w_score, atlas, n_parcels):
@@ -87,27 +83,31 @@ def calculate_mean_w_score(w_score, atlas, n_parcels):
     return mean_w_score
 
 #------------------------------------------------------------------------------
-# Load atlases ( Schaefer-400 and White-matter tractography - JHU )
+# Load atlases (Schaefer-400 and JHU white matter atlas)
+#------------------------------------------------------------------------------
 
-schafer_atlas = load_nifti(os.path.join(path_atlas, f'schaefer{nnodes}.nii.gz'))
+schafer_atlas = load_nifti(os.path.join(path_atlas, f'Schaefer{nnodes}.nii.gz'))
 WM_atlas      = load_nifti(os.path.join(path_atlas, 'JHU_thr25.nii.gz'))
 
-# -1 is done to exclude the 0 label
+# -1 is done to exclude the 0 label from the count of labels
 nWM = np.unique(WM_atlas).shape[0] - 1
 
 #------------------------------------------------------------------------------
-# Load group-averaged w-score map and multiply it by -1
+# Load group-averaged w-score map and invert values (multiplied by -1)
+#------------------------------------------------------------------------------
 
 w_score_mean = -1 * load_nifti(path_results + 'mean_w_score_' + subtype + '.nii.gz')
 
 #------------------------------------------------------------------------------
 # Calculate mean w-scores for Schaefer and JHU parcels - parcellation step
+#------------------------------------------------------------------------------
 
 w_score_schaefer  = calculate_mean_w_score(w_score_mean, schafer_atlas, nnodes)
 w_score_wm_tracts = calculate_mean_w_score(w_score_mean, WM_atlas, nWM)
 
 #------------------------------------------------------------------------------
-# Save the parcellated results to .npy format
+# Save the parcellated results as a numpy array
+#------------------------------------------------------------------------------
 
 ''' NOTE: group-averaged maps are parcellated'''
 
@@ -117,11 +117,13 @@ np.save(path_results + 'mean_w_score_' + subtype + '_WM_tracts.npy',
         w_score_wm_tracts)
 
 #------------------------------------------------------------------------------
-# Visualize and save cortical mean w-score maps
+# Visualize and save (both gifti and cifti versions) cortical mean w-score maps
+#------------------------------------------------------------------------------
 
 schaefer = nntdata.fetch_schaefer2018('fslr32k')[str(nnodes) + 'Parcels7Networks']
 atlas = load_data(dlabel_to_gifti(schaefer))
 
+# gifti format
 save_gifti(parcel2fsLR(atlas,
                        w_score_schaefer[:int(nnodes/2)].reshape(int(nnodes/2), 1),
                        'L'),
@@ -131,11 +133,18 @@ save_gifti(parcel2fsLR(atlas,
                        'R'),
            path_results + 'rh.mean_wscore_' + subtype + '_Schaefer')
 
+# cifti format
+save_parcellated_data_in_Schaefer_forVis(w_score_schaefer,
+                                         path_results,
+                                        'mean_wscore_' + subtype + '_Schaefer')
+
+# Visualize when running the code
 show_on_surface_and_save(w_score_schaefer.reshape(nnodes,1), nnodes, -0.3, 0.3,
                          path_fig, 'mean_wscore_' + subtype + '_Schaefer.png')
 
 #------------------------------------------------------------------------------
-# Labels of the white matter tracks defined by the atlas
+# White matter tracts labels (JHU atlas)
+#------------------------------------------------------------------------------
 
 name_columns = ['Anterior thalamic radiation L',
                 'Anterior thalamic radiation R',
@@ -157,6 +166,10 @@ name_columns = ['Anterior thalamic radiation L',
                 'Uncinate fasciculus R',
                 'Superior longitudinal fasciculus (temporal part) L',
                 'Superior longitudinal fasciculus (temporal part) R']
+
+#------------------------------------------------------------------------------
+# Create a barplot to show the w-score values per tract
+#------------------------------------------------------------------------------
 
 # Sorting white matter data to create a barplot
 w_score_wm_tracts = np.reshape(w_score_wm_tracts, nWM)
@@ -201,9 +214,12 @@ for label in (ax.get_xticklabels() + ax.get_yticklabels()):
     label.set_fontsize(12)
 
 plt.tight_layout()
-plt.savefig(os.path.join(path_fig, 'barplot_wscore_' + subtype + '_WMtracts'), dpi = 300)
+plt.savefig(os.path.join(path_fig, 'barplot_wscore_' + subtype + '_WMtracts'),
+            dpi = 300)
 plt.show()
 
+#------------------------------------------------------------------------------
+# Save white matter w-scores as NIfTI
 #------------------------------------------------------------------------------
 
 for n in range(1, nWM + 1):
@@ -216,8 +232,11 @@ save_nifti(WM_atlas,
 
 template = nib.load(path_results + 'w_score_' +  subtype + '_WM_tracts.nii.gz')
 
+#------------------------------------------------------------------------------
+# Visualize white matter tract w-scores on glass brain
+#------------------------------------------------------------------------------
+
 plt.figure()
-# Whole brain sagittal cuts and map is thresholded at 3
 plot_glass_brain(template,
                  colorbar = False,
                  plot_abs = False,
@@ -227,7 +246,8 @@ plot_glass_brain(template,
                  symmetric_cbar = True,
                  cmap = "coolwarm")
 
-plt.savefig(os.path.join(path_fig, 'w_score_' + subtype + '_WM_tracts.png'), dpi = 300)
+plt.savefig(os.path.join(path_fig, 'w_score_' + subtype + '_WM_tracts.png'),
+            dpi = 300)
 plt.show()
 
 #------------------------------------------------------------------------------

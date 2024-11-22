@@ -1,7 +1,7 @@
 """
 *******************************************************************************
 
-Purpose:
+Script purpose:
 
     Looking into the role of Structural Connectome disease progression
     evaluated using the Pearson corr
@@ -12,66 +12,64 @@ Purpose:
             degree preserving nulls
             edge-length and degree preserving nulls
 
-# Results:
+Script output:
+
     n = 1,000; vasa
+
     ----------------------------------------------------------------------
-    pearson correlation of node and neighbor - based on SC: 0.4610690006423789
+
+    pearson correlation of node and neighbor - based on SC: 0.5183006859750392
+
     ----------------------------------------------------------------------
-    spin test p-value: 0.001998001998001998
+
+    spin test p-value: 0.000999000999000999
     degree-preserving test p-value: 0.000999000999000999
-    edge length and degree-preserving test p-value: 0.04495504495504495
+    edge length and degree-preserving test p-value: 0.025974025974025976
+
     ----------------------------------------------------------------------
+
+Note:
+
+    The results coming from this script are shown in Fig. 2a.
+
 *******************************************************************************
 """
 
 #------------------------------------------------------------------------------
 # Libraries
 #------------------------------------------------------------------------------
+
 import os
 import random
 import warnings
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from IPython import get_ipython
 from scipy.stats import pearsonr
 from joblib import Parallel, delayed
-from netneurotools.stats import gen_spinsamples
+from functions import vasa_null_Schaefer
 from scipy.spatial.distance import squareform, pdist
 from functions import (match_length_degree_distribution,
                        randmio_und,
                        pval_cal)
+from globals import nnodes, path_fig, path_results, path_atlas, path_sc
 
 #------------------------------------------------------------------------------
 # Configuration
 #------------------------------------------------------------------------------
 
 warnings.filterwarnings("ignore")
-get_ipython().magic('reset -sf')
 random.seed(5647)
-
-#------------------------------------------------------------------------------
-# Paths
-#------------------------------------------------------------------------------
-
-base_path    = '/Users/asaborzabadifarahani/Desktop/ALS/ALS_git/'
-path_data    = os.path.join(base_path, 'data/')
-path_results = os.path.join(base_path, 'results/')
-path_sc      = os.path.join(base_path, 'data/SC/')
-script_name  = os.path.basename(__file__).split('.')[0]
-path_fig     = os.path.join(os.getcwd(), 'generated_figures/', script_name)
-os.makedirs(path_fig, exist_ok = True)
 
 #------------------------------------------------------------------------------
 # Constants
 #------------------------------------------------------------------------------
 
-nnodes  = 400   # Schaefer-400
-subtype = 'all' #'all' #'bulbar' #'spinal'
+subtype = 'all' # Options: 'all', 'spinal', 'bulbar'
 nspins  = 1000  # number of null realizations
 
 #------------------------------------------------------------------------------
-# Needed Functions
+# Needed functions
 #------------------------------------------------------------------------------
 
 positive_color = [0.872, 0.4758, 0.449]
@@ -106,7 +104,7 @@ def plot_boxplot_combined(data, nulls, ax, boxplot_label):
     ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
     ax.boxplot(nulls)
-    ax.set_ylim((-0.3, 0.5))
+    ax.set_ylim((-0.3, 0.55))
     ax.scatter([1], data,
                s = 80,
                c = 'red',
@@ -124,20 +122,22 @@ def plot_boxplot_combined(data, nulls, ax, boxplot_label):
 disease_profile = np.load(path_results + 'mean_w_score_' + str(subtype) + '_Schaefer.npy')
 disease_profile = np.reshape(disease_profile, nnodes)
 
-# Load structural network
-# Make its diagonal elements equal to zero
-sc = np.load(path_sc + 'adj.npy')
+# Load structural network - not log transformed
+sc = np.load(path_sc + 'adj_noLog.npy')
 sc[sc <= 0] = 0
+
+# Make its diagonal elements equal to zero
 sc[np.eye(nnodes).astype(bool)] = 0
 
 #------------------------------------------------------------------------------
-# Analysis: Node-Neighbor Atrophy Relationship
+# Analysis: node-neighbour atrophy relationship - calculate real value
+# Fig. 2a - left side
 #------------------------------------------------------------------------------
 
 neighbour_abnormality = np.zeros((nnodes,))
 
 for i in range(nnodes):
-    neighbour_abnormality[i] = np.nansum(disease_profile * sc[i, :])/(np.count_nonzero(sc[i, :]))
+    neighbour_abnormality[i] = np.nansum(disease_profile * sc[i, :])/(np.sum(sc[i, :]))
 
 # Create the scatter plot
 fig, ax =  plt.subplots(figsize = (10, 10))
@@ -152,8 +152,8 @@ plt.ylabel('Y Axis Label')
 plt.title('Scatter Plot with Regression Line')
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-ax.set_xlim((-0.04, 0.10))
-ax.set_ylim((-0.3, 0.4))
+ax.set_xlim((-0.08, 0.15))
+ax.set_ylim((-0.3, 0.35))
 plt.tight_layout()
 plt.savefig(path_fig + 'sc_scatterplot_w_score.svg',
         bbox_inches = 'tight',
@@ -161,57 +161,53 @@ plt.savefig(path_fig + 'sc_scatterplot_w_score.svg',
         transparent = True)
 plt.show()
 
-#------------------------------------------------------------------------------
-# 1. Spin Tests
-#------------------------------------------------------------------------------
-
-coords = np.genfromtxt(path_data + 'schaefer_' + str(nnodes) + '.txt')
-coords = coords[:, -3:]
-nnodes = len(coords)
-hemiid = np.zeros((nnodes, ))
-hemiid[:int(nnodes/2)] = 1
-spins = gen_spinsamples(coords,
-                        hemiid,
-                        n_rotate = nspins,
-                        seed = 1234,
-                        method = 'vasa')
-
-# real value
+# Real correlation value
 val_corr, _ = pearsonr(disease_profile,
                        neighbour_abnormality)
 print(val_corr)
 
+#------------------------------------------------------------------------------
+# 1. Spin tests
+# Fig. 2a - right side
+#------------------------------------------------------------------------------
+
+spins = vasa_null_Schaefer(nspins)
 generated_null = np.zeros((nspins,))
 for n in range(nspins):
     neighbour_abnormality_null = np.zeros((nnodes,))
     disease_profile_null = disease_profile[spins[:, n]]
     for i in range(nnodes):
-        neighbour_abnormality_null[i] = np.nansum(disease_profile_null * sc[i, :])/(np.count_nonzero(sc[i, :]))
+        neighbour_abnormality_null[i] = np.nansum(disease_profile_null * sc[i, :])/(np.sum(sc[i, :]))
     generated_null[n], _ = pearsonr(neighbour_abnormality_null, disease_profile_null)
     del disease_profile_null
 
 p_spin = pval_cal(val_corr, generated_null, nspins)
 plot_boxplot(val_corr, generated_null.reshape(nspins, 1), 'sc_boxplot_spintest')
+np.save(path_results + 'null_spin_sc.npy', generated_null)
 
 #------------------------------------------------------------------------------
 # 2. Edge-length and degree preserving nulls
+# Fig. 2a - right side
 #------------------------------------------------------------------------------
 
-eu_distance = squareform(pdist(coords, metric = "euclidean"))
+coords = np.genfromtxt(path_atlas + 'Schaefer_' + str(nnodes) + '.txt')
+coords = coords[:, -3:]
+eu_distance = squareform(pdist(coords,
+                               metric = "euclidean"))
 eu_dist_rec = 1 / eu_distance
 eu_dist_rec[np.eye(nnodes, dtype = bool)] = 0
 distance_net = eu_dist_rec
 
 def process_spin(args):
-    s_ind, net, distance_net, disease_profile, networks_spin_test = args
+    s_ind, net, distance_net, disease_profile = args
     _, net_rewired, _ = match_length_degree_distribution(net,
                                                          distance_net,
                                                          10,
                                                          nnodes*20)
     net_rewired[np.eye(nnodes).astype(bool)] = 0
     null_neighbour_abnormality = np.zeros(nnodes)
-    for i in range(nnodes):  # for each node
-        null_neighbour_abnormality[i] = np.nansum(disease_profile * net_rewired[i, :])/(np.count_nonzero(net_rewired[i, :]))
+    for i in range(nnodes):
+        null_neighbour_abnormality[i] = np.nansum(disease_profile * net_rewired[i, :])/(np.sum(net_rewired[i, :]))
 
     null_corr, _ = pearsonr(null_neighbour_abnormality, disease_profile)
     return s_ind, net_rewired, null_neighbour_abnormality, null_corr
@@ -222,7 +218,7 @@ null_1 = np.zeros((nspins, 1))
 
 net = sc.copy()
 def wrapper(s_ind):
-    args = [s_ind, net, distance_net, disease_profile, net]
+    args = [s_ind, net, distance_net, disease_profile]
     return process_spin(args)
 
 # Parallel execution
@@ -235,9 +231,11 @@ for s_ind, result in enumerate(results):
 
 pval_net_1 = pval_cal(val_corr, null_1, nspins)
 plot_boxplot(val_corr, null_1, 'sc_boxplot_network_null_model_conservative')
+np.save(path_results + 'null_degree_lenght_sc.npy', null_1)
 
 #------------------------------------------------------------------------------
 # 3. Degree preserving nulls
+# Fig. 2a - right side
 #------------------------------------------------------------------------------
 
 def process_spin_degree(args):
@@ -245,10 +243,9 @@ def process_spin_degree(args):
     net_rewired,_ = randmio_und(net, 10)
     net_rewired[np.eye(nnodes).astype(bool)] = 0
     null_neighbour_abnormality = np.zeros(nnodes)
-    for i in range(nnodes):  # for each node
-        null_neighbour_abnormality[i] = np.nansum(disease_profile * net_rewired[i, :])/(np.count_nonzero(net_rewired[i, :]))
+    for i in range(nnodes):
+        null_neighbour_abnormality[i] = np.nansum(disease_profile * net_rewired[i, :])/(np.sum(net_rewired[i, :]))
     null_corr, _ = pearsonr(null_neighbour_abnormality, disease_profile)
-
     return s_ind, net_rewired, null_neighbour_abnormality, null_corr
 
 nulls_2 = np.zeros((nspins, nnodes, nnodes))
@@ -270,6 +267,7 @@ for s_ind, result in enumerate(results):
 
 pval_net_2 = pval_cal(val_corr, null_2, nspins)
 plot_boxplot(val_corr, null_2,' sc_boxplot_network_null_model_degree')
+np.save(path_results + 'null_degree_sc.npy', null_2)
 
 #------------------------------------------------------------------------------
 # Combined visualization

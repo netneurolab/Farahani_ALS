@@ -1,7 +1,7 @@
 """
 *******************************************************************************
 
-Function for plotting the results of behavioral PLS           
+Function for plotting the results of behavioral PLS
 
 *******************************************************************************
 """
@@ -40,16 +40,15 @@ def plot_scores_and_correlations_unicolor(lv,
     plt.figure(figsize = (8, 8))
     plt.title(f'Scores for latent variable {lv}')
 
-    # Assuming 'Diagnosis' column holds values "ALS" or "control"
     sns.regplot(x = pls_result['x_scores'][:, lv],
                 y = pls_result['y_scores'][:, lv],
                 scatter = False)
     sns.scatterplot(x = pls_result['x_scores'][:, lv],
                     y = pls_result['y_scores'][:, lv],
-                    c = clinical_scores,
-                    s=200,
-                    cmap = 'coolwarm',
-                    vmin = 0,
+                    c = -1*clinical_scores,
+                    s = 200,
+                    cmap = 'coolwarm_r',
+                    vmin = -1,
                     vmax = 1,
                     edgecolor='black',
                     linewidth = 0.5)
@@ -58,7 +57,7 @@ def plot_scores_and_correlations_unicolor(lv,
     plt.ylabel('Y scores')
     plt.tight_layout()
 
-    plt.savefig(path_fig +'score_xy_' + str(lv) + '_' + column_name + '.svg',
+    plt.savefig(path_fig + 'score_xy_' + str(lv) + '_' + column_name + '.svg',
             bbox_inches = 'tight',
             dpi = 300,
             transparent = True)
@@ -82,13 +81,14 @@ def plot_loading_bar(lv,
                      group_colors,
                      vmin_val,
                      vmax_val,
-                     path_fig):
+                     path_fig,
+                     name_plus):
     err = (pls_result["bootres"]["y_loadings_ci"][:, lv, 1] -
            pls_result["bootres"]["y_loadings_ci"][:, lv, 0]) / 2
     values = pls_result.y_loadings[:,lv]
 
     # Create a bar plot with different colors
-    plt.figure(figsize = (10,16)) # Adjust the figure size if needed
+    plt.figure(figsize = (10, 16))
     bars = plt.barh(combined_columns,
                    values,
                    xerr = err)
@@ -122,7 +122,7 @@ def plot_loading_bar(lv,
     plt.xticks(rotation = 90)
     plt.tight_layout()
 
-    plt.savefig(path_fig + 'barplot_' + str(lv) +'.svg',
+    plt.savefig(path_fig + 'barplot_' + str(name_plus) + '_' + str(lv) +'.svg',
             bbox_inches = 'tight',
             dpi = 300,
             transparent = True)

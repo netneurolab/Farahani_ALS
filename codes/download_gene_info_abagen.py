@@ -1,10 +1,21 @@
 """
 *******************************************************************************
 
-Purpose:
-    data needed to perform gene expression analysis
-    all genes in Allen Human Brain
-    this data is used later on in the GO enrichment analysis
+Script purpose:
+
+    Data needed to perform gene expression analysis
+    All genes in Allen Human Brain
+    This data is used later on in the gene enrichment analysis
+
+Script output:
+    Name of the genes are saved as:
+    'names_genes_filtered.mat'
+
+    Gene maps are saved as:
+    'gene_coexpression_filtered.mat'
+
+Note:
+    These files are inputs to the ABAnnotate software for gene enrichment analysis.
 
 *******************************************************************************
 """
@@ -13,36 +24,26 @@ Purpose:
 # Libraries
 #------------------------------------------------------------------------------
 
-import os
 import abagen
 import warnings
 import numpy as np
 import pandas as pd
 from scipy.io import savemat
-from IPython import get_ipython
 from nilearn.datasets import fetch_atlas_schaefer_2018
+from globals import path_results, nnodes
 
 #------------------------------------------------------------------------------
 # Configuration
 #------------------------------------------------------------------------------
 
 warnings.filterwarnings("ignore")
-get_ipython().magic('reset -sf')
-
-#------------------------------------------------------------------------------
-# Paths
-#------------------------------------------------------------------------------
-
-base_path    = '/Users/asaborzabadifarahani/Desktop/ALS/ALS_network/'
-path_results = os.path.join(base_path,'results/')
 
 #------------------------------------------------------------------------------
 # Constants
 #------------------------------------------------------------------------------
 
-no_filter         = 0
-parc              = 'Schaefer400'
-nnodes            = 400
+no_filter = 0
+parc      = 'Schaefer400'
 
 #------------------------------------------------------------------------------
 # Start using abagen to get gene information
@@ -81,5 +82,6 @@ else:
 
     data_to_save = {'gene_coexpression': np.array(expression_st)}
     savemat(path_results + 'gene_coexpression_filtered.mat', data_to_save)
+
 #------------------------------------------------------------------------------
 # END

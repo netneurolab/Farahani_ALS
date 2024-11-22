@@ -1,15 +1,12 @@
 """
 *******************************************************************************
 
-Purpose:
+Script purpose:
 
     This code is used to generate the border files
     border files are used later on to create figures using wb_view
 
     To create these border files, ``wb_command'' is used!
-
-Note:
-    Change paths if needed.
 
 *******************************************************************************
 """
@@ -20,24 +17,10 @@ Note:
 
 import os
 import numpy as np
-from IPython import get_ipython
 from functions import save_gifti
 import fsl.data.gifti as loadgifti
 from netneurotools.datasets import fetchers
-#------------------------------------------------------------------------------
-# Configuration
-#------------------------------------------------------------------------------
-
-get_ipython().magic('reset -sf')
-
-#------------------------------------------------------------------------------
-# Paths
-#------------------------------------------------------------------------------
-
-base_path       = '/Users/asaborzabadifarahani/Desktop/ALS/ALS_git/'
-path_results    = os.path.join(base_path, 'results/')
-path_wb_command = '/Users/asaborzabadifarahani/Downloads/workbench/bin_macosx64/wb_command'
-path_surface    = '/Users/asaborzabadifarahani/Desktop/GA/HumanCorticalParcellations_wN_6V6gD/'
+from globals import path_results, path_surface, path_wb_command
 
 #------------------------------------------------------------------------------
 # Create a border for Broca's area
@@ -48,7 +31,7 @@ atlas_mml = fetchers.fetch_mmpall(version='fslr32k')
 data_L = loadgifti.loadGiftiVertexData(atlas_mml[0])[1]
 
 # area 44 and area 45
-broca = np.int32(1*((data_L==74+180))) + np.int32(1*((data_L==75+180)))
+broca = np.int32(1*((data_L==74+180))) + np.int32(1*((data_L == 75+180)))
 save_gifti(broca, path_results + 'lh.broca')
 
 command = f'{path_wb_command} -metric-label-import ' +\
@@ -92,7 +75,7 @@ os.system(command)
 epi_rank_R = path_results + 'rh.epicenters_all_rank.func.gii'
 data_epi_rank_R = loadgifti.loadGiftiVertexData(epi_rank_R)[1]
 
-top_epi_rank_R = np.int32(1*((data_epi_rank_R==np.max(data_epi_rank_R.T))))
+top_epi_rank_R = np.int32(1*((data_epi_rank_R == np.max(data_epi_rank_R.T))))
 save_gifti(top_epi_rank_R, path_results + 'rh.top_epi_rank_R')
 
 command = f'{path_wb_command} -metric-label-import ' +\
