@@ -10,7 +10,7 @@ Script purpose:
 
 Script output:
 
-    A cleaned demographic dataset containing 792 entries, which will be saved as
+    A cleaned demographic dataset containing 792 entries, will be saved as
    'data_demographic_clean.csv'.
 
 Mapping for Categorical Variables:

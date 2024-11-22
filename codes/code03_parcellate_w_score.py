@@ -38,7 +38,7 @@ Script output:
 Note:
 
     All saved w-scores have been multiplied by -1.
-    The results coming from this script are shown in Fig. 1b, Fig 1c.
+    The results coming from this script are shown in Fig. 1b-d and also in Fig.S11.
 
 *******************************************************************************
 """

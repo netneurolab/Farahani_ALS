@@ -3,7 +3,7 @@
 
 Script purpose:
 
-    To create a w-score map per subject for various groups like 'all', 'bulbar', 'spinal'.
+    To create a w-score map per subject for various groups like 'all', 'bulbar', and 'spinal'.
     Output includes individual subjects' w-score maps and a mean w-score map per group.
 
     spinal onset = 140 subjects
@@ -28,7 +28,7 @@ Script output:
 Note:
 
     The w-score saved is raw and has ''not'' yet been multiplied by -1.
-    The results coming from this script are shown in Fig. 1a, and are later used
+    The results coming from this script are shown in Fig. 1a and later used
     by 'code03_parcellate_w_score.py' script.
 
 *******************************************************************************

@@ -3,7 +3,7 @@
 
 Script purpose:
 
-    Comapre behavioral measures across two ALS subtypes, namely spinal and bulabr-ALS
+    Compare behavioral measures across two ALS subtypes, namely spinal and bulbar-ALS
 
 Script output:
 
@@ -35,7 +35,7 @@ Script output:
 
 Note:
 
-    Results are presented in supplementary table and also in Fig.6b.
+    Results are presented in Fig.6b.
 
 *******************************************************************************
 """
@@ -160,6 +160,7 @@ df_bulbar = df_bulbar[combined_columns]
 #------------------------------------------------------------------------------
 # Missing Value Count for Bulbar and Spinal Groups
 #------------------------------------------------------------------------------
+
 bulbar_missing_counts = df_bulbar.isna().sum().reset_index()
 bulbar_missing_counts.columns = ['Measure', 'Bulbar_Missing_Count']
 

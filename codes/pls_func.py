@@ -73,7 +73,8 @@ def plot_scores_and_correlations_unicolor(lv,
     print(f'x-score and y-score Pearson correlation for latent variable {lv}: \
           {score_correlation_pearsonr[0]:.4f}')
 
-#------------------------------------------------------------------------------ 
+#------------------------------------------------------------------------------
+ 
 def plot_loading_bar(lv,
                      pls_result,
                      combined_columns,
@@ -128,5 +129,6 @@ def plot_loading_bar(lv,
             transparent = True)
 
     plt.show()
+
 #------------------------------------------------------------------------------
 # END

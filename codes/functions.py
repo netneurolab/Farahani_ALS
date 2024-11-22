@@ -512,9 +512,8 @@ def load_HCP_names():
 
     return(name_contrasts)
 
+#------------------------------------------------------------------------------
 
-
-#%%
 def save_parcellated_data_in_Schaefer_forVis(data, path_save, name_save):
     """
     Save a parcel-wise map based on the Schaefer-Tian atlas for visualization in workbench.
@@ -564,7 +563,8 @@ def save_parcellated_data_in_Schaefer_forVis(data, path_save, name_save):
     # Save map
     new_img.to_filename(os.path.join(path_save, f"{name_save}_parcellated" +'.dscalar.nii'))
 
-#%%
+#------------------------------------------------------------------------------
+
 def vasa_null_Schaefer(nspins):
     # Info related to spin tests
     coords = np.genfromtxt(path_atlas + 'Schaefer_400.txt')
@@ -579,5 +579,6 @@ def vasa_null_Schaefer(nspins):
                             seed = 1234,
                             method = 'vasa')
     return spins
-#%%
+
+#------------------------------------------------------------------------------
 # END

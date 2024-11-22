@@ -61,7 +61,7 @@ Script output:
 
     -----------------------------------------------------------------------
 
-    At the cortical level the number of parcels significant after FDR is equal to 33.
+    At the cortical level, the number of parcels significant after FDR is equal to 33.
     [ np.sum(p_values_corr<0.05) = 33 ]
 
     Before FDR the number is equal to 105 parcels.
@@ -69,7 +69,7 @@ Script output:
 Note:
 
     The loaded w-score maps are raw and not yet multiplied by -1.
-    All t-maps and significance maps (both for schaefer-400 parcels and JHU parcels)
+    All t-maps and significance maps (both for Schaefer-400 parcels and JHU parcels)
     are saved.
 
 *******************************************************************************

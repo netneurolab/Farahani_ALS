@@ -8,7 +8,7 @@ Script purpose:
     This data is used later on in the gene enrichment analysis
 
 Script output:
-    Name of the genes are saved as:
+    The name of the genes are saved as:
     'names_genes_filtered.mat'
 
     Gene maps are saved as:

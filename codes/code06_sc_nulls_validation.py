@@ -32,7 +32,7 @@ Script output:
 
 Note:
 
-    The results coming are shown as a supplementary figure.
+    The results are shown as a supplementary figure (Fig.S2).
 
 *******************************************************************************
 """

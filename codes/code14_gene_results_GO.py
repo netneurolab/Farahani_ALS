@@ -6,7 +6,7 @@ Script purpose:
     Visualize the outputs of biological and cellular -patheay enrichment
 
 Note:
-    The results coming from this script are shown in Fig. 4.
+    The results coming from this script are shown in Fig.4a.
 
 *******************************************************************************
 """

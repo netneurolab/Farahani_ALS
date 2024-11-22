@@ -3,11 +3,10 @@
 
 Script purpose:
 
-    The aim of this code to delve into details of gene expression analysis results.
-    This is requested by a reviewer.
+    The aim of this code is to delve into the details of gene expression analysis results.
 
 NOTE:
-    The results coming from this script are shown in a supplementary figure.
+    The results coming from this script are shown in a supplementary figure (Fig.S7).
 
 *******************************************************************************
 """

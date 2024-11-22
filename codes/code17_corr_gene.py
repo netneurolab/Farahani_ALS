@@ -3,7 +3,7 @@
 
 Script purpose:
 
-    Generate a csv file to save correlation values of genes (from AHBA)
+    Generate a CSV file to save correlation values of genes (from AHBA)
     and atrophy/epicenter maps.
 
 Script output:

@@ -16,7 +16,7 @@ Script output:
 
 Note:
 
-    The generated files are needed for ABAnnotate (related to Fig. 4).
+    The generated files are needed for ABAnnotate (related to Fig.4).
 
 *******************************************************************************
 """

@@ -149,7 +149,7 @@ missing_counts_df = pd.DataFrame.from_dict(missing_counts,
                                            columns = ['Missing Subjects'])
 
 # Optimize the filtering conditions
-limit_num_sub_with_nan = 21 # remove the feature if it was rarely recorded across subjects
+limit_num_sub_with_nan = 21 # Remove the feature if it was rarely recorded across subjects
 conditions = ((missing_counts_df['Missing Subjects'] <= limit_num_sub_with_nan) &
       (~missing_counts_df.index.str.contains("date|Date|index|Unnamed|Visit_details|DBM|Site|Status|TimePoint")))
 missing_counts_df = missing_counts_df[conditions]

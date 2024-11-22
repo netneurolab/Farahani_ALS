@@ -3,12 +3,12 @@
 
 Script purpose:
 
-    This script is developed to create two summary tables for supplementary material.
+    This script is developed to create two summary tables (Table.S1 and Table.S5).
 
 Summary of results:
 
     -----------------------------------------------------------------------
-    Control demgraphic:
+    Control demographic:
          Study       Site_y   mean_age        Female (%)      total_subjects
     0   CALSNIC1    Calgary  54.300000        60.000000              10
     1   CALSNIC1   Edmonton  58.350000        45.000000              20

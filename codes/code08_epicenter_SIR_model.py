@@ -41,7 +41,7 @@ Script output:
 
 NOTE:
 
-    The results coming from this script are shown in Fig. 2c and also in Fig. 6a.
+    The results of this script are shown in Fig.S4 and Fig.S10
 
 *******************************************************************************
 """

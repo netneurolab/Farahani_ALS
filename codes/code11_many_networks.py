@@ -62,7 +62,7 @@ Script output:
 
 Note:
 
-    The results coming from this script are shown in Fig. 3 and also in a supplementary figure.
+    The results coming from this script are shown in Fig.3 and Fig.S6.
 
 *******************************************************************************
 """

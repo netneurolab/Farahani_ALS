@@ -5,7 +5,7 @@ Script purpose:
 
     Generate Epicenter maps for individuals with ALS
     Create man and std of epicenter maps across them
-    Create histogram to show node-neighbor values per ALS participant.
+    Create a histogram to show node-neighbor values per ALS participant.
 
 Script output:
 
@@ -40,7 +40,7 @@ Script output:
 
 Note:
 
-    The results coming from this script are shown as a supplementary figure.
+    The results from this script are shown as a supplementary figure (Fig.S3).
 
 *******************************************************************************
 """

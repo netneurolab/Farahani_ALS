@@ -3,7 +3,7 @@
 
 Function to define paths and constants for the whole project!
 
-User should set the paths in this script to be able to run the project.
+The user should set the paths in this script to be able to run the project.
 
 *******************************************************************************
 """
