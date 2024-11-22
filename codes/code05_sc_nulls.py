@@ -30,7 +30,7 @@ Script output:
 
 Note:
 
-    The results coming from this script are shown in Fig. 2a.
+    The results coming from this script are shown in Fig.2a.
 
 *******************************************************************************
 """

@@ -50,7 +50,7 @@ Script output:
 
 Note:
 
-    The results coming from this script are shown in Fig. 2b and Fig. 6a.
+    The results coming from this script are shown in Fig.2b and Fig.6a.
 
 *******************************************************************************
 """

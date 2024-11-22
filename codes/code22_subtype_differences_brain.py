@@ -21,13 +21,13 @@ Script output:
     * p-values are saved in the same manner.
     ----------------------------------------------------------------------
 
-    For the three significant parcels the p-values (FDR corrected) are:
+    For the three significant parcels, the p-values (FDR corrected) are:
 
         0.01125909, 0.01125909, 0.02170763
     ----------------------------------------------------------------------
 
 Note:
-    The results coming from this script are shown in Fig. 6b.
+    The results coming from this script are shown in Fig.6b.
 
 *******************************************************************************
 """

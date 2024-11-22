@@ -79,7 +79,7 @@ Script output:
 
 NOTE:
 
-    The results coming from this script are shown as a supplementary table (Table. S7).
+    The results coming from this script are shown as a supplementary table (Table.S7).
 
 *******************************************************************************
 """
