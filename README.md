@@ -17,7 +17,7 @@ This section outlines the functionality of each script within the repository:
 - `code04_voneconomo_atrophy.py` - Assesses atrophy values within each cytoarchitectonic class defined by the von-Economo parcellation (Fig.1d).
 - `code05_sc_nulls.py` - Computes node-neighbor correlation values to assess the role of structural connectome in shaping the ALS-related atrophy (Fig.2a).
 - `code06_sc_nulls_validation.py` - Computes node-neighbor correlation values to assess the role of structural connectome in shaping the ALS-related atrophy while using the Schaefer 800 nodes parcellation (Fig.S2).
-- `code07_epicenter_ranking.py` - Identifies cortical epicenter likelihood maps through node-neighbor assessment (Fig.2b).
+- `code07_epicenter_ranking.py` - Identifies cortical epicenter likelihood maps through node-neighbor assessment (Fig.2b, and Fig.6a).
 - `code08_epicenter_SIR_model.py` - Identifies cortical epicenter likelihood maps using the SIR model (Fig.S4, and Fig.S10).
 - `code09_epicenter_compare_methods.py` - Compares epicenter maps derived from different methodologies.
 - `code10_epicenter_individuals.py` - Examines inter-individual differences in node-neighbor correlation values and epicenter maps (Fig.S3).
@@ -26,13 +26,13 @@ This section outlines the functionality of each script within the repository:
 - `code13_gene_enrichment_null_generation.py` - Creates a null model to be used later by [ABAnnotate](https://github.com/LeonDLotter/ABAnnotate) (MATLAB) when performing the gene enrichment analysis (related to Fig.4).
 - `code14_gene_results_GO.py & code15_gene_results_cells.py` - Visualize the results obtained from  gene enrichment analysis (Fig.4).
 - `code16_cell_markers.py` - Visualizes the cell markers for endothelial cells and pericytes (Fig.S7).
-- `code17_corr_gene.py` - Calculates the correlation of individual genes in AHBA with group-average atrophy and epicenter maps of ALS (Fig.S7).
+- `code17_corr_gene.py` - Calculates the correlation of individual genes in AHBA with group-average atrophy and epicenter maps of ALS (included as a supplementary csv file).
 - `code18_hcp_group_maps.py` - Parcellates the [HCP](https://www.humanconnectome.org/study/hcp-young-adult/article/s1200-group-average-data-release) group average task-activation maps (400 nodes Schaefer parcellation) and create '.border' files for the regions in the motor cortex related to different body parts.
 - `code19_pls_epicenter.py` - Applies a Behavioral Partial Least Squares ([PLS](https://github.com/netneurolab/pypyls)) model to correlate behavioral data with cortical epicenter likelihood maps in the ALS cohort (Fig.5 and Fig.S8).
 - `code20_pls_atrophy.py` - Applies a Behavioral Partial Least Squares ([PLS](https://github.com/netneurolab/pypyls)) model to correlate behavioral data with cortical atrophy maps in the ALS cohort (Fig.S9).
 - `code21_pls_demographic.py` - Retrieves information on the number of ALS participants with missing values for the PLS analysis (Table.S7).
-- `code22_subtype_differences_brain.py & code23_subtype_differences_behavior.py` - Investigate differences between bulbar and spinal onset ALS patients in terms of behavior and epicenter likelihood maps (Fig.6).
-- `sTable1_demographic.py` - Retrieves the necessary information to create Table.S1 and Table.S5.
+- `code22_subtype_differences_brain.py & code23_subtype_differences_behavior.py` - Investigate differences between bulbar and spinal onset ALS patients in terms of behavior and epicenter likelihood maps (Fig.6b).
+- `sTable_demographic.py` - Retrieves the necessary information to create Table.S1 and Table.S5.
 
 #### Utility Scripts
 
