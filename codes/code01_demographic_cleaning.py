@@ -4,7 +4,7 @@
 Script purpose:
 
     This script processes and cleans the demographic Excel file for the research study.
-    The  steps include filtering out specific sites and subjects,
+    The steps include filtering out specific sites and subjects,
     filling in missing demographic info, adding DBM paths,
     and excluding certain patient categories (e.g. PLS).
 
@@ -75,7 +75,7 @@ Summary of results:
     12     2
     2      0
 
-    so In total I have:
+    In total, we have:
     0     9 + 10
     1     20 + 20
     2     0 + 0 ***** nothing
@@ -90,7 +90,7 @@ Summary of results:
     11    27 + 18
     12    7 + 2
 
-In total we have 12 imaigng sites ( 13 - 1 ).
+In total, we have 12 imaging sites ( 13 - 1 ).
 
 *******************************************************************************
 """

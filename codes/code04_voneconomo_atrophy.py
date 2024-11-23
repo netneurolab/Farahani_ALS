@@ -31,7 +31,7 @@ Script output:
 
 Note:
 
-    The results are provided in Fig. 1d.
+    The results are provided in Fig.1d.
 
 *******************************************************************************
 """

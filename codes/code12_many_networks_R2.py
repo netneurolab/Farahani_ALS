@@ -14,36 +14,27 @@ Script output:
     -----------------------------------------------------------------------
     Masked by structural connectome
 
-        0.2647764423878821
-        [0.27122314]
-        [0.27866305]
-        [0.27403189]
-        [0.33144551]
-        [0.27022747]
+    SC alone: 0.26679800208993987
+    "gene_coexpression": 0.27351241 - p_value: 0.01889811
+    "receptor_similarity": 0.27987226 - p_value: 0.0069993
+    "laminar_similarity": 0.27639516 - p_value: 0.0136653
+    "metabolic_connectivity": 0.33263576 - p_value: 0.00049995
+    "haemodynamic_connectivity": 0.27318216 - p_value: 0.01889811
 
-    p_spin_corr - fdr corrected
-        [0.0269946 ,
-         0.0089982 ,
-         0.01266413,
-         0.0009998 ,
-         0.02919416])
+    *** All FDR corrected, n = 10,000
 
     -----------------------------------------------------------------------
     Not masked by structural connectome:
 
-         0.26679800208993987
-         [0.2663641 ]
-         [0.26521575]
-         [0.26647204]
-         [0.27952604]
-         [0.26680799]
+         
+    SC alone: 0.26679800208993987
+    "gene_coexpression": 0.2663641 - p_value: 0.97790221
+    "receptor_similarity": 0.26521575 - p_value: 0.97790221
+    "laminar_similarity": 0.26647204 - p_value: 0.97790221
+    "metabolic_connectivity": 0.27952604 - p_value: 0.0139986
+    "haemodynamic_connectivity": 0.26680799 - p_value: 0.97790221
 
-    p_spin_corr - fdr corrected
-        [0.97680464,
-         0.97680464,
-         0.97680464,
-         0.014997  ,
-         0.97680464]
+    *** All FDR corrected, n = 10,000
     -----------------------------------------------------------------------
 Note:
 
@@ -71,7 +62,7 @@ from globals import nnodes, path_fig, path_results, path_networks, path_sc
 #------------------------------------------------------------------------------
 
 subtype    = 'all' # Options: 'all', 'spinal', 'bulbar'
-nspins     = 5000  # Number of null realizations
+nspins     = 10000 # Number of null realizations
 include_sc = 0     # Masked based on sc if 1 else 0
 
 #------------------------------------------------------------------------------
@@ -133,8 +124,8 @@ print(pearsonr(disease_profile.flatten(),
 neighbour_abnormality = np.zeros((len(networks.keys()), nnodes))
 print('node-neighbour correlation based on other networks:')
 for n, network in enumerate(networks.keys()):
-    temp_disease_profile = disease_profile # copy disease pattern into this loop
-
+    temp_disease_profile = np.load(path_results + 'mean_w_score_' + str(subtype) + '_Schaefer.npy')
+    temp_disease_profile = np.reshape(temp_disease_profile, nnodes)
     net = networks[network].copy()
     plt.figure()
     sns.heatmap(net)
@@ -247,9 +238,9 @@ p_spin_corr = [multipletests(p_spin, method = 'fdr_bh')][0][1]
 
 # Set up the figure with subplots
 fig, axes = plt.subplots(nrows = 2, ncols = 3, figsize = (15, 10)) # 5 networks mean 5 subplots
-axes = axes.flatten()  # Flatten the array of axes for easy iteration
+axes = axes.flatten() # Flatten the array of axes for easy iteration
 
-# Plot each network in its own subplot
+# Plot each network in its subplot
 for n, (network, ax) in enumerate(zip(networks.keys(), axes)):
     ax.hist(rsq_spins[:, n], bins = 30, alpha = 0.7, color = 'skyblue')
     ax.axvline(rsq_sc_net[n], color = 'red', linestyle = '--')

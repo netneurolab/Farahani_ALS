@@ -21,7 +21,7 @@ Script output:
 
     # group-averaged map (volume-based):
         'mean_w_score_' + str(filename) + '.nii.gz'
-        'mean_w_score_all.nii.gz' is shown in Fig. 1a.
+        'mean_w_score_all.nii.gz' is shown in Fig.1a.
 
     -----------------------------------------------------------------------
 

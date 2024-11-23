@@ -40,7 +40,7 @@ Script output:
 
 Note:
 
-    The results from this script are shown as a supplementary figure (Fig.S3).
+    The results from this script are shown in Fig.S3.
 
 *******************************************************************************
 """
