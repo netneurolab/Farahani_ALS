@@ -211,5 +211,44 @@ plt.savefig(os.path.join(path_fig, 'von_economo_classes_' + subtype + '.svg'),
             transparent = True)
 plt.show()
 
+
+bar_width = 0.75
+y = np.arange(len(label_von_networks))
+
+fig, ax = plt.subplots(figsize = (5, 1.3))
+
+for i, height in enumerate(network_specific_disease_measure):
+    # Bar
+    ax.barh(y[i], height, height=bar_width, color='silver', alpha=1)
+
+    # Extract all atrophy values (ROIs) belonging to this von Economo class
+    roi_vals = disease_profile[atlas_7Network_von == i]
+
+    # Jittered x-values (atrophy values), constant y
+    jitter_strength = 0.06  # adjust to spread dots vertically
+    y_jitter = np.random.normal(loc=y[i], scale=jitter_strength, size=len(roi_vals))
+
+    ax.scatter(roi_vals,
+               y_jitter,
+               color='gray',
+               alpha=0.4,
+               s=4,
+               zorder=3)
+
+ax.set_yticks(y)
+ax.set_yticklabels(label_von_networks)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax = plt.gca()
+
+# Generate x-axis ticks including the maximum value
+x_ticks = np.linspace(-0.3, 0.4, num = 5) # 5 ticks from 0 to x_max
+ax.set_xticks(x_ticks)
+plt.tight_layout()
+plt.savefig(os.path.join(path_fig, 'ComBiol_von_economo_classes_' + subtype + '.svg'),
+            bbox_inches = 'tight',
+            dpi = 300,
+            transparent = True)
+plt.show()
 #------------------------------------------------------------------------------
 # END

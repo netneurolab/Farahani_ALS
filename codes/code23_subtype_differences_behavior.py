@@ -7,32 +7,28 @@ Script purpose:
 
 Script output:
 
-    Significant columns: ['ALSFRS_1_Speech',
-                          'ALSFRS_2_Salivation',
-                          'ALSFRS_3_Swallowing',
-                          'ALSFRS_4_Handwriting',
-                          'ALSFRS_8_Walking',
-                          'ALSFRS_9_Climbingstairs',
+    Significant columns:
+        'ALSFRS_1_Speech',
+        'ALSFRS_2_Salivation',
+        'ALSFRS_3_Swallowing',
+        'ALSFRS_6_Dressing&hygiene',
+        'ALSFRS_8_Walking',
+        'ALSFRS_9_Climbingstairs',
 
-                          'Reflexes_Jaw',
-                          'Reflexes_RightArm',
-                          'Reflexes_LeftArm',
+        'Reflexes_Jaw',
+        'Reflexes_RightArm'
 
-                          'Symptom_Duration']
-
-    P-values: [4.213732858770071e-09,
-               4.907393979427152e-05,
-               4.282010697553192e-06,
-               0.012375765586002289,
-               0.02839695151936666,
-               0.020184871471165846,
-
-               0.0024630381869709074,
-               1.0903416562789722e-05,
-               0.020184871471165846,
-
-               0.023104266546472414]
-
+    P-values:
+         2.5810162639725052e-14,
+         4.8811682458624486e-08,
+         2.1673241552726613e-10,
+         0.03626170897625032, 
+         0.028066359753179327,
+         0.01910752878132643,
+         
+         0.0011327923693763625,
+         0.004367387794637937
+  
 Note:
 
     Results are presented in Fig.6b.
@@ -49,6 +45,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import matplotlib.pyplot as plt
+from scipy.stats import mannwhitneyu
 from globals import path_fig, path_results
 from statsmodels.stats.multitest import multipletests
 
@@ -206,11 +203,11 @@ for idx, column in enumerate(combined_columns):
     print(len(group_spinal))
     print(len(group_bulbar))
     print('-------------')
-    p_vals = [stats.ttest_ind(group_spinal,
-                group_bulbar,
-                nan_policy = 'omit',
-                equal_var = False).pvalue]
-    p_vals_array[idx,:] = p_vals[0]
+    p_vals = mannwhitneyu(group_spinal,
+                     group_bulbar,
+                     alternative='two-sided').pvalue
+
+    p_vals_array[idx,:] = p_vals
 
 p_values_corr = multipletests(p_vals_array.flatten(), method = 'fdr_bh')[1]
 significant_columns = []
