@@ -1,6 +1,8 @@
 # Network Spreading and Local Biological Vulnerability in Amyotrophic Lateral Sclerosis
 Authors: Asa Farahani, Justine Y. Hansen, Vincent Bazinet, Golia Shafiei, Louis D. Collins, Mahsa Dadar, Sanjay Kalra, Alain Dagher, Bratislav Misic.
 
+The paper is now avaliable at [Communications Biology](https://www.nature.com/articles/s42003-025-08561-3).
+
 This repository contains the code used to generate the results in the study "Network Spreading and Local Biological Vulnerability in Amyotrophic Lateral Sclerosis". The study investigates the intricate relationship between network spreading mechanisms and local biological vulnerability for shaping the atrophy in Amyotrophic Lateral Sclerosis (ALS).
 
 ## Data Confidentiality Notice
